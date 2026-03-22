@@ -1,1 +1,94 @@
 /* Bloodrust — SteamFoil custom styles */
+
+/* Z-index layering */
+#global_header,
+#store_header,
+#global_action_menu {
+    position: relative;
+    z-index: 10 !important;
+}
+
+.responsive_page_frame > *,
+.page_content_ctn > *,
+.responsive_page_template_content > * {
+    position: relative;
+    z-index: 3;
+}
+
+#footer,
+#footer_spacer {
+    position: relative;
+    z-index: 3;
+}
+
+/* Scanlines — subtle dungeon crawler feel */
+body::after {
+    content: '';
+    position: fixed;
+    inset: 0;
+    pointer-events: none;
+    z-index: 99998;
+    background: repeating-linear-gradient(180deg,
+        rgba(0,0,0,0.04) 0, rgba(0,0,0,0.04) 1px,
+        transparent 1px, transparent 4px);
+    mix-blend-mode: multiply;
+}
+
+/* Vignette — heavy, dark */
+body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    pointer-events: none;
+    z-index: 99996;
+    background: radial-gradient(ellipse at center, transparent 50%, rgba(0,0,0,0.5) 100%);
+}
+
+/* Title glow — rust red */
+.apphub_AppName {
+    text-shadow:
+        0 0 10px rgba(196,80,48,0.5),
+        0 0 30px rgba(196,80,48,0.2),
+        0 0 60px rgba(196,80,48,0.1) !important;
+    animation: sfTitlePulse 6s ease-in-out infinite;
+}
+
+@keyframes sfTitlePulse {
+    0%, 100% {
+        text-shadow:
+            0 0 10px rgba(196,80,48,0.5),
+            0 0 30px rgba(196,80,48,0.2),
+            0 0 60px rgba(196,80,48,0.1);
+    }
+    50% {
+        text-shadow:
+            0 0 14px rgba(196,80,48,0.7),
+            0 0 40px rgba(196,80,48,0.3),
+            0 0 80px rgba(196,80,48,0.15);
+    }
+}
+
+.apphub_AppName:hover {
+    animation: sfGlitch 0.3s steps(2) 1 !important;
+}
+
+@keyframes sfGlitch {
+    0%   { transform: translate(0); }
+    20%  { transform: translate(-2px, 1px); filter: hue-rotate(90deg); }
+    40%  { transform: translate(2px, -1px); }
+    60%  { transform: translate(-1px, -1px); filter: hue-rotate(-90deg); }
+    80%  { transform: translate(1px, 2px); }
+    100% { transform: translate(0); filter: none; }
+}
+
+/* Reduced motion */
+@media (prefers-reduced-motion: reduce) {
+    body::before,
+    body::after {
+        display: none !important;
+    }
+    .apphub_AppName {
+        animation: none !important;
+        text-shadow: none !important;
+    }
+}

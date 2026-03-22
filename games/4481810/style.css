@@ -1,1 +1,113 @@
 /* DVD Survivors — SteamFoil custom styles */
+
+/* Z-index layering */
+#global_header,
+#store_header,
+#global_action_menu {
+    position: relative;
+    z-index: 10 !important;
+}
+
+.responsive_page_frame > *,
+.page_content_ctn > *,
+.responsive_page_template_content > * {
+    position: relative;
+    z-index: 3;
+}
+
+#footer,
+#footer_spacer {
+    position: relative;
+    z-index: 3;
+}
+
+/* CRT scanlines */
+body::after {
+    content: '';
+    position: fixed;
+    inset: 0;
+    pointer-events: none;
+    z-index: 99998;
+    background: repeating-linear-gradient(180deg,
+        rgba(0,0,0,0.06) 0, rgba(0,0,0,0.06) 1px,
+        transparent 1px, transparent 3px);
+    mix-blend-mode: multiply;
+}
+
+/* Vignette */
+body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    pointer-events: none;
+    z-index: 99996;
+    background: radial-gradient(ellipse at center, transparent 55%, rgba(0,0,0,0.35) 100%);
+}
+
+/* Title glow */
+.apphub_AppName {
+    text-shadow:
+        0 0 10px rgba(242,196,91,0.4),
+        0 0 30px rgba(242,196,91,0.15),
+        0 0 60px rgba(242,196,91,0.08) !important;
+    animation: sfTitlePulse 4s ease-in-out infinite;
+}
+
+@keyframes sfTitlePulse {
+    0%, 100% {
+        text-shadow:
+            0 0 10px rgba(242,196,91,0.4),
+            0 0 30px rgba(242,196,91,0.15),
+            0 0 60px rgba(242,196,91,0.08);
+    }
+    50% {
+        text-shadow:
+            0 0 14px rgba(242,196,91,0.6),
+            0 0 40px rgba(242,196,91,0.25),
+            0 0 80px rgba(242,196,91,0.12);
+    }
+}
+
+.apphub_AppName:hover {
+    animation: sfGlitch 0.3s steps(2) 1 !important;
+}
+
+@keyframes sfGlitch {
+    0%   { transform: translate(0); }
+    20%  { transform: translate(-2px, 1px); filter: hue-rotate(90deg); }
+    40%  { transform: translate(2px, -1px); }
+    60%  { transform: translate(-1px, -1px); filter: hue-rotate(-90deg); }
+    80%  { transform: translate(1px, 2px); }
+    100% { transform: translate(0); filter: none; }
+}
+
+/* Chromatic aberration on screenshots */
+.highlight_screenshot_link img,
+.screenshot_holder img {
+    transition: filter 0.3s ease;
+}
+
+.highlight_screenshot_link:hover img,
+.screenshot_holder:hover img {
+    animation: sfChroma 0.15s ease-out;
+}
+
+@keyframes sfChroma {
+    0% {
+        filter: drop-shadow(-3px 0 0 rgba(255,0,0,0.35))
+                drop-shadow(3px 0 0 rgba(0,255,255,0.35));
+    }
+    100% { filter: none; }
+}
+
+/* Reduced motion */
+@media (prefers-reduced-motion: reduce) {
+    body::before,
+    body::after {
+        display: none !important;
+    }
+    .apphub_AppName {
+        animation: none !important;
+        text-shadow: none !important;
+    }
+}

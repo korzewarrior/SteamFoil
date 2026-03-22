@@ -4,7 +4,7 @@
     /* ================================================================
        SteamFoil — content script
        Fetches game configs from GitHub, verifies ownership via token,
-       injects custom CSS, and activates built-in visual effects.
+       injects custom CSS, and optionally activates the bouncing logo.
        ================================================================ */
 
     const REPO_OWNER = 'korzewarrior';
@@ -65,8 +65,7 @@
 
     function verifyToken(token) {
         if (!token) return false;
-        const pageText = document.body.innerText;
-        return pageText.includes(token);
+        return document.body.innerText.includes(token);
     }
 
     if (!verifyToken(manifest.token)) return;
@@ -89,32 +88,6 @@
         return css.replace(/url\(\s*['"]?assets\//g, `url(${REPO_BASE}/games/${appId}/assets/`);
     }
 
-    // ── Inject z-index layering ──────────────────────────────────────
-
-    function injectLayering() {
-        const style = document.createElement('style');
-        style.textContent = `
-            #global_header,
-            #store_header,
-            #global_action_menu {
-                position: relative;
-                z-index: 10 !important;
-            }
-            .responsive_page_frame > *,
-            .page_content_ctn > *,
-            .responsive_page_template_content > * {
-                position: relative;
-                z-index: 3;
-            }
-            #footer,
-            #footer_spacer {
-                position: relative;
-                z-index: 3;
-            }
-        `;
-        document.head.appendChild(style);
-    }
-
     // ── Inject custom CSS ────────────────────────────────────────────
 
     async function injectCustomCSS() {
@@ -130,7 +103,7 @@
         document.head.appendChild(style);
     }
 
-    // ── Effects ──────────────────────────────────────────────────────
+    // ── Bouncing logo (opt-in) ───────────────────────────────────────
 
     function initBouncingLogo(cfg) {
         const imgSrc = assetUrl(cfg.image || 'logo.png');
@@ -292,295 +265,11 @@
         window.addEventListener('resize', syncBounds);
     }
 
-    function initParticles(cfg) {
-        const count = cfg.count || 28;
-        const colors = cfg.colors || [
-            'rgba(242,196,91,0.6)', 'rgba(255,138,92,0.5)',
-            'rgba(120,200,255,0.4)', 'rgba(180,130,255,0.4)',
-            'rgba(255,255,255,0.3)'
-        ];
-
-        const style = document.createElement('style');
-        style.textContent = `
-            .sf-particle {
-                position: fixed;
-                border-radius: 50%;
-                pointer-events: none;
-                z-index: 2;
-                opacity: 0;
-                will-change: transform, opacity;
-                animation: sfParticle linear infinite;
-            }
-            @keyframes sfParticle {
-                0%   { opacity: 0; transform: translate(0, 0) scale(0.5); }
-                10%  { opacity: 1; }
-                90%  { opacity: 1; }
-                100% { opacity: 0; transform: translate(var(--drift, 0px), -100vh) scale(1); }
-            }
-        `;
-        document.head.appendChild(style);
-
-        for (let i = 0; i < count; i++) {
-            const p = document.createElement('div');
-            p.className = 'sf-particle';
-            p.setAttribute('aria-hidden', 'true');
-            const size = 2 + Math.random() * 3;
-            const dur = 12 + Math.random() * 18;
-            const color = colors[Math.floor(Math.random() * colors.length)];
-            p.style.cssText = `
-                width:${size}px; height:${size}px;
-                left:${Math.random() * 100}%; bottom:-10px;
-                background:${color}; box-shadow:0 0 ${size * 2}px ${color};
-                animation-duration:${dur}s;
-                animation-delay:${Math.random() * -dur}s;
-                --drift:${(Math.random() - 0.5) * 80}px;
-            `;
-            document.body.appendChild(p);
-        }
-    }
-
-    function initScanlines(cfg) {
-        const opacity = cfg.opacity ?? 0.06;
-        const spacing = cfg.spacing ?? 3;
-        const el = document.createElement('div');
-        el.setAttribute('aria-hidden', 'true');
-        el.style.cssText = `
-            position:fixed; inset:0; pointer-events:none; z-index:99998;
-            background:repeating-linear-gradient(180deg,
-                rgba(0,0,0,${opacity}) 0, rgba(0,0,0,${opacity}) 1px,
-                transparent 1px, transparent ${spacing}px);
-            mix-blend-mode:multiply;
-        `;
-        document.body.appendChild(el);
-    }
-
-    function initVignette(cfg) {
-        const strength = cfg.strength ?? 0.35;
-        const el = document.createElement('div');
-        el.setAttribute('aria-hidden', 'true');
-        el.style.cssText = `
-            position:fixed; inset:0; pointer-events:none; z-index:99996;
-            background:radial-gradient(ellipse at center, transparent 55%, rgba(0,0,0,${strength}) 100%);
-        `;
-        document.body.appendChild(el);
-    }
-
-    function initFlicker(cfg) {
-        const interval = cfg.interval ?? 8;
-        const el = document.createElement('div');
-        el.setAttribute('aria-hidden', 'true');
-
-        const style = document.createElement('style');
-        style.textContent = `
-            .sf-flicker {
-                position:fixed; inset:0; pointer-events:none; z-index:99997;
-                animation: sfFlicker ${interval}s infinite;
-            }
-            @keyframes sfFlicker {
-                0%, 97%, 100% { opacity:0; }
-                97.5% { opacity:0.03; background:rgba(255,255,255,0.04); }
-                98%   { opacity:0; }
-                98.3% { opacity:0.02; background:rgba(255,255,255,0.03); }
-                98.6% { opacity:0; }
-            }
-        `;
-        document.head.appendChild(style);
-        el.className = 'sf-flicker';
-        document.body.appendChild(el);
-    }
-
-    function initTitleGlow(cfg) {
-        const color = cfg.color || 'rgba(242,196,91,0.4)';
-        const speed = cfg.pulseSpeed ?? 4;
-
-        const parts = color.match(/rgba?\(([^)]+)\)/);
-        if (!parts) return;
-        const channels = parts[1];
-
-        const style = document.createElement('style');
-        style.textContent = `
-            .apphub_AppName {
-                text-shadow:
-                    0 0 10px rgba(${channels}),
-                    0 0 30px rgba(${channels.replace(/[^,]+$/, '0.15')}),
-                    0 0 60px rgba(${channels.replace(/[^,]+$/, '0.08')}) !important;
-                animation: sfTitlePulse ${speed}s ease-in-out infinite;
-            }
-            @keyframes sfTitlePulse {
-                0%, 100% {
-                    text-shadow:
-                        0 0 10px ${color},
-                        0 0 30px ${color.replace(/[\d.]+\)$/, '0.15)')},
-                        0 0 60px ${color.replace(/[\d.]+\)$/, '0.08)')};
-                }
-                50% {
-                    text-shadow:
-                        0 0 14px ${color.replace(/[\d.]+\)$/, '0.6)')},
-                        0 0 40px ${color.replace(/[\d.]+\)$/, '0.25)')},
-                        0 0 80px ${color.replace(/[\d.]+\)$/, '0.12)')};
-                }
-            }
-            .apphub_AppName:hover {
-                animation: sfGlitch 0.3s steps(2) 1 !important;
-            }
-            @keyframes sfGlitch {
-                0%   { transform: translate(0); }
-                20%  { transform: translate(-2px, 1px); filter: hue-rotate(90deg); }
-                40%  { transform: translate(2px, -1px); }
-                60%  { transform: translate(-1px, -1px); filter: hue-rotate(-90deg); }
-                80%  { transform: translate(1px, 2px); }
-                100% { transform: translate(0); filter: none; }
-            }
-        `;
-        document.head.appendChild(style);
-    }
-
-    function initAsh(cfg) {
-        const count = cfg.count ?? 18;
-        const colors = cfg.colors || [
-            'rgba(190,160,135,0.9)',
-            'rgba(238,189,145,0.95)',
-            'rgba(176,90,58,0.7)',
-            'rgba(94,70,56,0.5)'
-        ];
-
-        const style = document.createElement('style');
-        style.textContent = `
-            .sf-ash {
-                position:fixed;
-                pointer-events:none;
-                z-index:2;
-                border-radius:999px;
-                opacity:0;
-                will-change:transform,opacity;
-                animation:sfAshFall linear infinite;
-            }
-            @keyframes sfAshFall {
-                0%   { transform:translate3d(0,-8vh,0) rotate(0deg); opacity:0; }
-                12%  { opacity:0.6; }
-                78%  { opacity:0.32; }
-                100% { transform:translate3d(var(--drift,16px),110vh,0) rotate(var(--spin,180deg)); opacity:0; }
-            }
-        `;
-        document.head.appendChild(style);
-
-        for (let i = 0; i < count; i++) {
-            const f = document.createElement('div');
-            f.className = 'sf-ash';
-            f.setAttribute('aria-hidden', 'true');
-            const w = 1.5 + Math.random() * 2.5;
-            const h = w * (1.5 + Math.random());
-            const dur = 14 + Math.random() * 16;
-            const color = colors[Math.floor(Math.random() * colors.length)];
-            const drift = (Math.random() - 0.5) * 60;
-            const spin = 120 + Math.random() * 240;
-            f.style.cssText = `
-                width:${w}px; height:${h}px;
-                left:${Math.random() * 100}%; top:-6%;
-                background:linear-gradient(180deg, ${color}, transparent);
-                box-shadow:0 0 10px rgba(180,92,54,0.12);
-                animation-duration:${dur}s;
-                animation-delay:${Math.random() * -dur}s;
-                --drift:${drift}px;
-                --spin:${spin}deg;
-            `;
-            document.body.appendChild(f);
-        }
-    }
-
-    function initShootingStars(cfg) {
-        const count = cfg.count ?? 4;
-        const color = cfg.color || 'rgba(255,255,255,0.9)';
-        const baseSpeed = cfg.speed ?? 4;
-
-        const style = document.createElement('style');
-        let keyframes = '';
-        let rules = '';
-
-        for (let i = 0; i < count; i++) {
-            const angle = 120 + Math.random() * 40;
-            const top = Math.random() * 35;
-            const left = 20 + Math.random() * 60;
-            const width = 80 + Math.random() * 140;
-            const thickness = 1 + Math.random() * 1.5;
-            const dur = baseSpeed + Math.random() * 3;
-            const delay = 5 + Math.random() * 55;
-            const dist = `calc(${60 + Math.random() * 40}vw + 200px)`;
-            const opacity = 0.5 + Math.random() * 0.5;
-
-            rules += `
-                .sf-shooting-star-${i} {
-                    position:fixed; pointer-events:none; z-index:2; opacity:0;
-                    top:${top}%; left:${left}%;
-                    width:${width}px; height:${thickness}px;
-                    background:linear-gradient(270deg, ${color}, ${color.replace(/[\d.]+\)$/, '0.2)')}, transparent);
-                    transform:rotate(${angle}deg);
-                    animation:sfStar${i} ${dur}s linear infinite;
-                    animation-delay:${delay}s;
-                }
-            `;
-            keyframes += `
-                @keyframes sfStar${i} {
-                    0%  { opacity:0; transform:rotate(${angle}deg) translate(0,0); }
-                    1%  { opacity:${opacity}; }
-                    99% { opacity:${opacity * 0.2}; transform:rotate(${angle}deg) translate(${dist},0); }
-                    100%{ opacity:0; transform:rotate(${angle}deg) translate(${dist},0); }
-                }
-            `;
-        }
-
-        style.textContent = rules + keyframes;
-        document.head.appendChild(style);
-
-        for (let i = 0; i < count; i++) {
-            const star = document.createElement('div');
-            star.className = `sf-shooting-star-${i}`;
-            star.setAttribute('aria-hidden', 'true');
-            document.body.appendChild(star);
-        }
-    }
-
-    function initChromaticAberration() {
-        const style = document.createElement('style');
-        style.textContent = `
-            .highlight_screenshot_link img,
-            .screenshot_holder img {
-                transition: filter 0.3s ease;
-            }
-            .highlight_screenshot_link:hover img,
-            .screenshot_holder:hover img {
-                animation: sfChroma 0.15s ease-out;
-            }
-            @keyframes sfChroma {
-                0% {
-                    filter: drop-shadow(-3px 0 0 rgba(255,0,0,0.35))
-                            drop-shadow(3px 0 0 rgba(0,255,255,0.35));
-                }
-                100% { filter: none; }
-            }
-        `;
-        document.head.appendChild(style);
-    }
-
     // ── Orchestrator ─────────────────────────────────────────────────
 
-    injectLayering();
+    await injectCustomCSS();
 
-    if (manifest.style !== false) {
-        await injectCustomCSS();
-    }
-
-    if (!reducedMotion && manifest.effects) {
-        const fx = manifest.effects;
-
-        if (fx['bouncing-logo']?.enabled) initBouncingLogo(fx['bouncing-logo']);
-        if (fx.particles?.enabled)        initParticles(fx.particles);
-        if (fx.scanlines?.enabled)         initScanlines(fx.scanlines);
-        if (fx.vignette?.enabled)          initVignette(fx.vignette);
-        if (fx.flicker?.enabled)           initFlicker(fx.flicker);
-        if (fx['title-glow']?.enabled)     initTitleGlow(fx['title-glow']);
-        if (fx.ash?.enabled)                      initAsh(fx.ash);
-        if (fx['shooting-stars']?.enabled)        initShootingStars(fx['shooting-stars']);
-        if (fx['chromatic-aberration']?.enabled) initChromaticAberration();
+    if (!reducedMotion && manifest.effects?.['bouncing-logo']?.enabled) {
+        initBouncingLogo(manifest.effects['bouncing-logo']);
     }
 })();

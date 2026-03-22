@@ -4,7 +4,6 @@
   "version": "1.0.0",
   "author": "Signal Spike Games",
   "token": "steamfoil:4469430:b7c3d5e2",
-  "style": true,
   "effects": {
     "bouncing-logo": {
       "enabled": true,
@@ -13,51 +12,6 @@
       "size": ["90px", "14vw", "200px"],
       "hueShift": 15,
       "opacity": 0.6
-    },
-    "particles": {
-      "enabled": true,
-      "count": 22,
-      "colors": [
-        "rgba(255,214,144,0.6)",
-        "rgba(240,122,62,0.55)",
-        "rgba(220,94,44,0.45)",
-        "rgba(196,80,48,0.4)",
-        "rgba(120,36,18,0.3)"
-      ]
-    },
-    "ash": {
-      "enabled": true,
-      "count": 18,
-      "colors": [
-        "rgba(190,160,135,0.9)",
-        "rgba(238,189,145,0.95)",
-        "rgba(176,90,58,0.7)",
-        "rgba(94,70,56,0.5)"
-      ]
-    },
-    "scanlines": {
-      "enabled": true,
-      "opacity": 0.04,
-      "spacing": 4
-    },
-    "vignette": {
-      "enabled": true,
-      "strength": 0.5
-    },
-    "flicker": {
-      "enabled": true,
-      "interval": 10
-    },
-    "title-glow": {
-      "enabled": true,
-      "color": "rgba(196,80,48,0.5)",
-      "pulseSpeed": 6
-    },
-    "shooting-stars": {
-      "enabled": false
-    },
-    "chromatic-aberration": {
-      "enabled": false
     }
   }
 }
