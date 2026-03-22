@@ -33,11 +33,5 @@
       "48": "icons/icon-48.png",
       "128": "icons/icon-128.png"
     }
-  },
-  "web_accessible_resources": [
-    {
-      "resources": ["icons/*"],
-      "matches": ["https://store.steampowered.com/*"]
-    }
-  ]
+  }
 }
