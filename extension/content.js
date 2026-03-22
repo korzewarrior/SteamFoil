@@ -435,6 +435,59 @@
         document.head.appendChild(style);
     }
 
+    function initAsh(cfg) {
+        const count = cfg.count ?? 18;
+        const colors = cfg.colors || [
+            'rgba(190,160,135,0.9)',
+            'rgba(238,189,145,0.95)',
+            'rgba(176,90,58,0.7)',
+            'rgba(94,70,56,0.5)'
+        ];
+
+        const style = document.createElement('style');
+        style.textContent = `
+            .sf-ash {
+                position:fixed;
+                pointer-events:none;
+                z-index:2;
+                border-radius:999px;
+                opacity:0;
+                will-change:transform,opacity;
+                animation:sfAshFall linear infinite;
+            }
+            @keyframes sfAshFall {
+                0%   { transform:translate3d(0,-8vh,0) rotate(0deg); opacity:0; }
+                12%  { opacity:0.6; }
+                78%  { opacity:0.32; }
+                100% { transform:translate3d(var(--drift,16px),110vh,0) rotate(var(--spin,180deg)); opacity:0; }
+            }
+        `;
+        document.head.appendChild(style);
+
+        for (let i = 0; i < count; i++) {
+            const f = document.createElement('div');
+            f.className = 'sf-ash';
+            f.setAttribute('aria-hidden', 'true');
+            const w = 1.5 + Math.random() * 2.5;
+            const h = w * (1.5 + Math.random());
+            const dur = 14 + Math.random() * 16;
+            const color = colors[Math.floor(Math.random() * colors.length)];
+            const drift = (Math.random() - 0.5) * 60;
+            const spin = 120 + Math.random() * 240;
+            f.style.cssText = `
+                width:${w}px; height:${h}px;
+                left:${Math.random() * 100}%; top:-6%;
+                background:linear-gradient(180deg, ${color}, transparent);
+                box-shadow:0 0 10px rgba(180,92,54,0.12);
+                animation-duration:${dur}s;
+                animation-delay:${Math.random() * -dur}s;
+                --drift:${drift}px;
+                --spin:${spin}deg;
+            `;
+            document.body.appendChild(f);
+        }
+    }
+
     function initShootingStars(cfg) {
         const count = cfg.count ?? 4;
         const color = cfg.color || 'rgba(255,255,255,0.9)';
@@ -526,6 +579,7 @@
         if (fx.vignette?.enabled)          initVignette(fx.vignette);
         if (fx.flicker?.enabled)           initFlicker(fx.flicker);
         if (fx['title-glow']?.enabled)     initTitleGlow(fx['title-glow']);
+        if (fx.ash?.enabled)                      initAsh(fx.ash);
         if (fx['shooting-stars']?.enabled)        initShootingStars(fx['shooting-stars']);
         if (fx['chromatic-aberration']?.enabled) initChromaticAberration();
     }

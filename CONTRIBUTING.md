@@ -145,6 +145,15 @@ Pulsing neon glow on the `.apphub_AppName` element, with a glitch effect on hove
 | `color` | string | `"rgba(242,196,91,0.4)"` | Glow color |
 | `pulseSpeed` | number | `4` | Seconds per pulse cycle |
 
+### `ash`
+
+Falling ash/debris flakes that drift sideways and rotate as they fall. Great for dark, atmospheric games.
+
+| Parameter | Type | Default | Description |
+|-----------|------|---------|-------------|
+| `count` | number | `18` | Number of ash flakes |
+| `colors` | string[] | (warm grays and browns) | CSS color values |
+
 ### `shooting-stars`
 
 Streaks of light that fly across the viewport at random intervals.
