@@ -65,10 +65,20 @@
 
     function verifyToken(token) {
         if (!token) return false;
-        return document.body.innerText.includes(token);
+        return document.body.innerText.includes(token)
+            || document.body.innerHTML.includes(token);
     }
 
-    if (!verifyToken(manifest.token)) return;
+    // Steam pages load content dynamically — retry a few times
+    let verified = verifyToken(manifest.token);
+    if (!verified) {
+        for (let i = 0; i < 5; i++) {
+            await new Promise(r => setTimeout(r, 1500));
+            verified = verifyToken(manifest.token);
+            if (verified) break;
+        }
+    }
+    if (!verified) return;
 
     // ── Notify background ────────────────────────────────────────────
 
