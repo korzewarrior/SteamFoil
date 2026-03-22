@@ -20,6 +20,14 @@ The extension icon shows a ✦ badge when a page has active SteamFoil enhancemen
 4. Enable **Developer mode**
 5. Click **Load unpacked** and select the extracted folder
 
+### See It Live
+
+Install the extension and visit these Steam pages to see SteamFoil in action:
+
+- [**DVD Survivors**](https://store.steampowered.com/app/4481810/) — CRT scanlines, vignette, bouncing logo, neon gold title glow, chromatic aberration
+- [**Starboys**](https://store.steampowered.com/app/3756250/) — Starfield overlay, deep space vignette, bouncing logo, nebula glow, amber gold title pulse
+- [**Bloodrust**](https://store.steampowered.com/app/4469430/) — Heavy rust vignette, subtle scanlines, bouncing logo, ember glow, smoldering borders
+
 ## For Game Developers
 
 Add visual flair to your Steam store page with custom CSS. Players with SteamFoil installed will see your styles — everyone else sees the normal page.
