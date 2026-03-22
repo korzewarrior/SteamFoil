@@ -87,6 +87,33 @@ body {
     color: rgba(224, 223, 230, 0.4);
 }
 
+.sf-actions {
+    margin-top: 12px;
+}
+
+.sf-btn {
+    width: 100%;
+    padding: 8px 12px;
+    border: 1px solid rgba(242, 196, 91, 0.25);
+    border-radius: 6px;
+    background: rgba(242, 196, 91, 0.08);
+    color: #f2c45b;
+    font-size: 13px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background 0.15s, border-color 0.15s;
+}
+
+.sf-btn:hover {
+    background: rgba(242, 196, 91, 0.16);
+    border-color: rgba(242, 196, 91, 0.4);
+}
+
+.sf-btn:disabled {
+    opacity: 0.5;
+    cursor: default;
+}
+
 .sf-footer {
     margin-top: 14px;
     padding-top: 10px;

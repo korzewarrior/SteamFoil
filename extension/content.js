@@ -22,13 +22,15 @@
 
     // ── Caching helpers ──────────────────────────────────────────────
 
-    async function cachedFetch(key, url) {
-        try {
-            const stored = await chrome.storage.local.get(key);
-            if (stored[key] && Date.now() - stored[key]._ts < CACHE_TTL) {
-                return stored[key].data;
-            }
-        } catch (e) { /* proceed to fetch */ }
+    async function cachedFetch(key, url, bypassCache) {
+        if (!bypassCache) {
+            try {
+                const stored = await chrome.storage.local.get(key);
+                if (stored[key] && Date.now() - stored[key]._ts < CACHE_TTL) {
+                    return stored[key].data;
+                }
+            } catch (e) { /* proceed to fetch */ }
+        }
 
         try {
             const res = await fetch(url, { cache: 'no-cache' });
@@ -45,6 +47,14 @@
             return null;
         }
     }
+
+    // ── Listen for force-reload from popup ────────────────────────────
+
+    chrome.runtime.onMessage.addListener((msg) => {
+        if (msg.type === 'force-reload') {
+            chrome.storage.local.clear().then(() => location.reload());
+        }
+    });
 
     // ── Fetch index ──────────────────────────────────────────────────
 
@@ -122,6 +132,7 @@
         const [sizeMin, sizePref, sizeMax] = cfg.size || ['100px', '12vw', '180px'];
         const hueShift = cfg.hueShift ?? 43;
         const opacity = cfg.opacity ?? 0.84;
+        const ar = cfg.aspectRatio || '409 / 226';
 
         const style = document.createElement('style');
         style.textContent = `
@@ -152,7 +163,7 @@
                 position: absolute;
                 top: 0; left: 0;
                 width: clamp(${sizeMin}, ${sizePref}, ${sizeMax});
-                aspect-ratio: 409 / 226;
+                aspect-ratio: ${ar};
                 will-change: transform;
             }
             .sf-bounce-sprite {

@@ -1,5 +1,7 @@
 (async function () {
     const statusEl = document.getElementById('sf-status');
+    const actionsEl = document.getElementById('sf-actions');
+    const reloadBtn = document.getElementById('sf-reload');
 
     const [tab] = await chrome.tabs.query({ active: true, currentWindow: true });
     if (!tab || !tab.url) {
@@ -12,6 +14,16 @@
         statusEl.innerHTML = '<p class="sf-not-steam">Navigate to a Steam store page to use SteamFoil.</p>';
         return;
     }
+
+    // Show force reload on any Steam app page
+    actionsEl.hidden = false;
+
+    reloadBtn.addEventListener('click', async () => {
+        reloadBtn.textContent = 'Reloading…';
+        reloadBtn.disabled = true;
+        await chrome.tabs.sendMessage(tab.id, { type: 'force-reload' });
+        window.close();
+    });
 
     const data = await chrome.storage.session.get(`tab_${tab.id}`);
     const info = data[`tab_${tab.id}`];

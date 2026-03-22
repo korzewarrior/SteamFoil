@@ -1,7 +1,7 @@
 {
   "name": "Bloodrust",
   "appId": 4469430,
-  "version": "1.0.0",
+  "version": "1.1.0",
   "author": "Signal Spike Games",
   "token": "steamfoil:4469430:b7c3d5e2",
   "effects": {
@@ -10,6 +10,7 @@
       "image": "logo.png",
       "speed": [160, 120],
       "size": ["90px", "14vw", "200px"],
+      "aspectRatio": "1024 / 314",
       "hueShift": 15,
       "opacity": 0.6
     }

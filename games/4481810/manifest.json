@@ -1,7 +1,7 @@
 {
   "name": "DVD Survivors",
   "appId": 4481810,
-  "version": "1.0.0",
+  "version": "1.1.0",
   "author": "Signal Spike Games",
   "token": "steamfoil:4481810:d9f2e8c1",
   "effects": {
@@ -10,6 +10,7 @@
       "image": "dvd-logo.png",
       "speed": [220, 168],
       "size": ["100px", "12vw", "180px"],
+      "aspectRatio": "409 / 226",
       "hueShift": 43,
       "opacity": 0.84
     }

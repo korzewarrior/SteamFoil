@@ -1,27 +1,22 @@
-/* DVD Survivors — SteamFoil custom styles */
+/* DVD Survivors — SteamFoil styles
+   Retro digital trash aesthetic: CRT, glitch, neon */
 
-/* Z-index layering */
-#global_header,
-#store_header,
-#global_action_menu {
+/* === Z-index layering === */
+#global_header, #store_header, #global_action_menu {
     position: relative;
     z-index: 10 !important;
 }
-
-.responsive_page_frame > *,
-.page_content_ctn > *,
+.responsive_page_frame > *, .page_content_ctn > *,
 .responsive_page_template_content > * {
     position: relative;
     z-index: 3;
 }
-
-#footer,
-#footer_spacer {
+#footer, #footer_spacer {
     position: relative;
     z-index: 3;
 }
 
-/* CRT scanlines */
+/* === CRT scanlines === */
 body::after {
     content: '';
     position: fixed;
@@ -34,7 +29,7 @@ body::after {
     mix-blend-mode: multiply;
 }
 
-/* Vignette */
+/* === Vignette === */
 body::before {
     content: '';
     position: fixed;
@@ -44,13 +39,14 @@ body::before {
     background: radial-gradient(ellipse at center, transparent 55%, rgba(0,0,0,0.35) 100%);
 }
 
-/* Title glow */
+/* === Title glow — pulsing gold neon === */
 .apphub_AppName {
     text-shadow:
         0 0 10px rgba(242,196,91,0.4),
         0 0 30px rgba(242,196,91,0.15),
         0 0 60px rgba(242,196,91,0.08) !important;
     animation: sfTitlePulse 4s ease-in-out infinite;
+    position: relative;
 }
 
 @keyframes sfTitlePulse {
@@ -68,6 +64,7 @@ body::before {
     }
 }
 
+/* === Glitch on title hover === */
 .apphub_AppName:hover {
     animation: sfGlitch 0.3s steps(2) 1 !important;
 }
@@ -81,15 +78,16 @@ body::before {
     100% { transform: translate(0); filter: none; }
 }
 
-/* Chromatic aberration on screenshots */
+/* === Chromatic aberration on screenshots === */
 .highlight_screenshot_link img,
 .screenshot_holder img {
-    transition: filter 0.3s ease;
+    transition: filter 0.3s ease, transform 0.3s ease;
 }
 
 .highlight_screenshot_link:hover img,
 .screenshot_holder:hover img {
     animation: sfChroma 0.15s ease-out;
+    transform: scale(1.01);
 }
 
 @keyframes sfChroma {
@@ -100,14 +98,72 @@ body::before {
     100% { filter: none; }
 }
 
-/* Reduced motion */
+/* === Neon border glow on game header image === */
+.game_header_image_full,
+.highlight_player_area {
+    box-shadow:
+        0 0 15px rgba(242,196,91,0.15),
+        0 0 40px rgba(242,196,91,0.06),
+        inset 0 0 30px rgba(0,0,0,0.3) !important;
+    border: 1px solid rgba(242,196,91,0.12) !important;
+    transition: box-shadow 0.4s ease;
+}
+
+.game_header_image_full:hover,
+.highlight_player_area:hover {
+    box-shadow:
+        0 0 20px rgba(242,196,91,0.25),
+        0 0 60px rgba(242,196,91,0.1),
+        inset 0 0 30px rgba(0,0,0,0.3) !important;
+}
+
+/* === Purchase area glow === */
+.game_area_purchase_game_wrapper {
+    border: 1px solid rgba(242,196,91,0.1) !important;
+    box-shadow: 0 0 20px rgba(242,196,91,0.06);
+    transition: box-shadow 0.3s ease, border-color 0.3s ease;
+}
+
+.game_area_purchase_game_wrapper:hover {
+    border-color: rgba(242,196,91,0.25) !important;
+    box-shadow: 0 0 30px rgba(242,196,91,0.12);
+}
+
+/* === Wishlist button pulse === */
+.queue_actions_ctn .btnv6_blue_hoverfade,
+.queue_actions_ctn .queue_btn_active {
+    animation: sfWishlistPulse 3s ease-in-out infinite;
+}
+
+@keyframes sfWishlistPulse {
+    0%, 100% { box-shadow: 0 0 8px rgba(242,196,91,0.15); }
+    50% { box-shadow: 0 0 18px rgba(242,196,91,0.3); }
+}
+
+/* === Tags get subtle glow === */
+.app_tag {
+    transition: box-shadow 0.2s ease, color 0.2s ease !important;
+}
+
+.app_tag:hover {
+    box-shadow: 0 0 10px rgba(242,196,91,0.2);
+    color: #f2c45b !important;
+}
+
+/* === Review score glow === */
+.game_review_summary {
+    text-shadow: 0 0 8px rgba(102,192,244,0.3);
+}
+
+/* === Section dividers glow === */
+.game_page_autocollapse_ctn,
+.game_area_description {
+    border-top: 1px solid rgba(242,196,91,0.08) !important;
+}
+
+/* === Reduced motion === */
 @media (prefers-reduced-motion: reduce) {
-    body::before,
-    body::after {
-        display: none !important;
-    }
-    .apphub_AppName {
-        animation: none !important;
-        text-shadow: none !important;
-    }
+    body::before, body::after { display: none !important; }
+    .apphub_AppName { animation: none !important; text-shadow: none !important; }
+    .queue_actions_ctn .btnv6_blue_hoverfade { animation: none !important; }
 }
