@@ -34,8 +34,9 @@
             const res = await fetch(url, { cache: 'no-cache' });
             if (!res.ok) return null;
 
-            const contentType = res.headers.get('content-type') || '';
-            const data = contentType.includes('json') ? await res.json() : await res.text();
+            const text = await res.text();
+            let data;
+            try { data = JSON.parse(text); } catch (e) { data = text; }
             try {
                 await chrome.storage.local.set({ [key]: { data, _ts: Date.now() } });
             } catch (e) { /* storage full, still usable */ }
