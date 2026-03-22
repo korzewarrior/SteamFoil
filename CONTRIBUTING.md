@@ -145,6 +145,16 @@ Pulsing neon glow on the `.apphub_AppName` element, with a glitch effect on hove
 | `color` | string | `"rgba(242,196,91,0.4)"` | Glow color |
 | `pulseSpeed` | number | `4` | Seconds per pulse cycle |
 
+### `shooting-stars`
+
+Streaks of light that fly across the viewport at random intervals.
+
+| Parameter | Type | Default | Description |
+|-----------|------|---------|-------------|
+| `count` | number | `4` | Number of shooting stars |
+| `color` | string | `"rgba(255,255,255,0.9)"` | Star color |
+| `speed` | number | `4` | Base animation duration in seconds (lower = faster) |
+
 ### `chromatic-aberration`
 
 Red/cyan split flash on screenshot images when hovered.

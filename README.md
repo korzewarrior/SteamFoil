@@ -42,6 +42,7 @@ Add visual flair to your Steam store page. Players with SteamFoil installed will
 | `vignette` | Darkened edges like a CRT tube |
 | `flicker` | Rare, subtle screen brightness flicker |
 | `title-glow` | Pulsing neon glow on the game title with glitch-on-hover |
+| `shooting-stars` | Streaks of light that fly across the viewport at random intervals |
 | `chromatic-aberration` | RGB split flash on screenshot hover |
 
 Custom CSS can also be applied for colors, borders, and other visual tweaks.

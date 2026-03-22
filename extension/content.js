@@ -435,6 +435,58 @@
         document.head.appendChild(style);
     }
 
+    function initShootingStars(cfg) {
+        const count = cfg.count ?? 4;
+        const color = cfg.color || 'rgba(255,255,255,0.9)';
+        const baseSpeed = cfg.speed ?? 4;
+
+        const style = document.createElement('style');
+        let keyframes = '';
+        let rules = '';
+
+        for (let i = 0; i < count; i++) {
+            const angle = 120 + Math.random() * 40;
+            const top = Math.random() * 35;
+            const left = 20 + Math.random() * 60;
+            const width = 80 + Math.random() * 140;
+            const thickness = 1 + Math.random() * 1.5;
+            const dur = baseSpeed + Math.random() * 3;
+            const delay = 5 + Math.random() * 55;
+            const dist = `calc(${60 + Math.random() * 40}vw + 200px)`;
+            const opacity = 0.5 + Math.random() * 0.5;
+
+            rules += `
+                .sf-shooting-star-${i} {
+                    position:fixed; pointer-events:none; z-index:2; opacity:0;
+                    top:${top}%; left:${left}%;
+                    width:${width}px; height:${thickness}px;
+                    background:linear-gradient(270deg, ${color}, ${color.replace(/[\d.]+\)$/, '0.2)')}, transparent);
+                    transform:rotate(${angle}deg);
+                    animation:sfStar${i} ${dur}s linear infinite;
+                    animation-delay:${delay}s;
+                }
+            `;
+            keyframes += `
+                @keyframes sfStar${i} {
+                    0%  { opacity:0; transform:rotate(${angle}deg) translate(0,0); }
+                    1%  { opacity:${opacity}; }
+                    99% { opacity:${opacity * 0.2}; transform:rotate(${angle}deg) translate(${dist},0); }
+                    100%{ opacity:0; transform:rotate(${angle}deg) translate(${dist},0); }
+                }
+            `;
+        }
+
+        style.textContent = rules + keyframes;
+        document.head.appendChild(style);
+
+        for (let i = 0; i < count; i++) {
+            const star = document.createElement('div');
+            star.className = `sf-shooting-star-${i}`;
+            star.setAttribute('aria-hidden', 'true');
+            document.body.appendChild(star);
+        }
+    }
+
     function initChromaticAberration() {
         const style = document.createElement('style');
         style.textContent = `
@@ -474,6 +526,7 @@
         if (fx.vignette?.enabled)          initVignette(fx.vignette);
         if (fx.flicker?.enabled)           initFlicker(fx.flicker);
         if (fx['title-glow']?.enabled)     initTitleGlow(fx['title-glow']);
+        if (fx['shooting-stars']?.enabled)        initShootingStars(fx['shooting-stars']);
         if (fx['chromatic-aberration']?.enabled) initChromaticAberration();
     }
 })();
