@@ -1,0 +1,110 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    width: 280px;
+    font-family: -apple-system, 'Segoe UI', Roboto, sans-serif;
+    background: #1b1b2f;
+    color: #e0dfe6;
+}
+
+.sf-popup {
+    padding: 16px;
+}
+
+.sf-header {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 14px;
+    padding-bottom: 12px;
+    border-bottom: 1px solid rgba(242, 196, 91, 0.15);
+}
+
+.sf-header h1 {
+    font-size: 16px;
+    font-weight: 700;
+    letter-spacing: 0.02em;
+    background: linear-gradient(135deg, #f2c45b, #ffd98e);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+
+.sf-logo {
+    border-radius: 4px;
+}
+
+.sf-status {
+    min-height: 48px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+.sf-checking {
+    color: rgba(224, 223, 230, 0.5);
+    font-size: 13px;
+}
+
+.sf-active {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.sf-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    padding: 3px 8px;
+    border-radius: 999px;
+    background: rgba(242, 196, 91, 0.12);
+    border: 1px solid rgba(242, 196, 91, 0.25);
+    color: #f2c45b;
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+}
+
+.sf-game-name {
+    font-size: 14px;
+    font-weight: 600;
+    color: #e0dfe6;
+}
+
+.sf-inactive {
+    font-size: 13px;
+    color: rgba(224, 223, 230, 0.6);
+    line-height: 1.5;
+}
+
+.sf-not-steam {
+    font-size: 13px;
+    color: rgba(224, 223, 230, 0.4);
+}
+
+.sf-footer {
+    margin-top: 14px;
+    padding-top: 10px;
+    border-top: 1px solid rgba(255, 255, 255, 0.06);
+    font-size: 12px;
+    text-align: center;
+}
+
+.sf-footer a {
+    color: rgba(242, 196, 91, 0.7);
+    text-decoration: none;
+}
+
+.sf-footer a:hover {
+    color: #f2c45b;
+}
+
+.sf-sep {
+    color: rgba(255, 255, 255, 0.15);
+    margin: 0 4px;
+}
