@@ -4,6 +4,8 @@ Community-driven visual enhancements for Steam store pages, verified by game dev
 
 SteamFoil is a browser extension that lets game developers customize their Steam store pages with CSS. Developers submit their styles to this repo, verify ownership with a token on their page, and players who install the extension see the enhanced version automatically.
 
+![SteamFoil in action](demo.gif)
+
 ## For Players
 
 **Install the extension**, then visit any Steam store page that has SteamFoil content. Styles appear automatically — no configuration needed.
